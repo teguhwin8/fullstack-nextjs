@@ -1,5 +1,12 @@
-import React, { useState } from "react"
-import style from "./login.module.css"
+import React, { useState, useEffect } from "react"
+import Cookie from "js-cookie"
+import Router from "next/router"
+import { unauthPage } from "../../middlewares/authorizationPage"
+
+export async function getServerSideProps(ctx) {
+	await (unauthPage(ctx))
+	return { props: {} }
+}
 
 export default function login() {
 	const [fields, setFields] = useState({
@@ -36,14 +43,14 @@ export default function login() {
 
 		const loginRes = await loginReq.json()
 
-		setFields({
-			email: '',
-			password: ''
-		})
 		setStatus({
 			type: 'success',
 			message: 'Login successfully'
 		})
+
+		Router.push('/posts')
+
+		Cookie.set('token', loginRes.token)
 	}
 
 	function fieldHanlder(e) {
