@@ -1,7 +1,7 @@
 import React, { useState } from "react"
-import style from "./register.module.css"
+import style from "./login.module.css"
 
-export default function register() {
+export default function login() {
 	const [fields, setFields] = useState({
 		email: '',
 		password: ''
@@ -12,7 +12,7 @@ export default function register() {
 		message: ''
 	})
 
-	async function registerHandler(e) {
+	async function loginHandler(e) {
 		e.preventDefault()
 
 		setStatus({
@@ -20,7 +20,7 @@ export default function register() {
 			message: 'Please wait ...'
 		})
 
-		const registerReq = await fetch('/api/auth/register', {
+		const loginReq = await fetch('/api/auth/login', {
 			method: "POST",
 			body: JSON.stringify(fields),
 			headers: {
@@ -29,9 +29,12 @@ export default function register() {
 		})
 
 
-		if (!registerReq.ok) return setStatus('error' + registerReq.status)
+		if (!loginReq.ok) return setStatus({
+			type: 'error',
+			message: 'Login error ' + loginReq.status
+		})
 
-		const registerRes = await registerReq.json()
+		const loginRes = await loginReq.json()
 
 		setFields({
 			email: '',
@@ -39,7 +42,7 @@ export default function register() {
 		})
 		setStatus({
 			type: 'success',
-			message: 'Register successfully'
+			message: 'Login successfully'
 		})
 	}
 
@@ -58,8 +61,8 @@ export default function register() {
 
 	return (
 		<div>
-			<h1>Register</h1>
-			<form onSubmit={registerHandler.bind(this)}>
+			<h1>Login</h1>
+			<form onSubmit={loginHandler.bind(this)}>
 
 				{/* Email */}
 				<input
@@ -84,7 +87,7 @@ export default function register() {
 
 				{/* Submit Button */}
 				<button type="submit">
-					Register Now
+					Login Now
         </button>
 
 				{/* Status */}
